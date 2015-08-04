@@ -1,0 +1,365 @@
+&HEAD CHID='horreo4b',TITLE='Road Tunnel Cornes-Horreo, Santiago de Compostela, Spain' /
+
+! One tube of the tunnel: dimensions 520 m wide x 9.00 m deep x 6.4 m tall, two road lanes same direction, overcrowded
+! SITUATION 1: 200000 kW. The origin and the fire is located at 260 meters of the PORTAL 1 in the center of the deep value
+
+! 5200 cells wide x 90 cells deep x 64 cells tall
+! cells 0.1 m wide x 0.1 m deep x 0.1 m tall
+&MESH IJK=5200,90,64, XB=0.0,520.0, -4.5,4.5, 0.0,6.4 /
+
+! simulation runs for 2700 s
+&TIME T_END=2700.0 /
+
+! enable formation and destruction of CO
+! the ambient temperature is 20 ºC, the relative humidity is 52 % and the initial value of the gas velocity in x coordinate RIGHT direction is 6.12 m/s
+&MISC CO_PRODUCTION=.TRUE., TMPA=20., HUMIDITY=52., U0=6.12/
+
+&REAC ID='WOOD_PE'
+       FYI='Description of the fire load of the Runehamar T1'
+       SOOT_YIELD = 0.02
+       C = 5.4
+       H = 10.2
+       O = 2.5
+       HEAT_OF_COMBUSTION = 22019.
+       CO_YIELD = 0.01 /
+
+! blows LEFT
+&SURF ID='BLOW1', POROUS=.TRUE., VEL= -24.56 /
+&SURF ID='BLOW2', POROUS=.TRUE., VEL= -24.56 /
+&SURF ID='BLOW3', POROUS=.TRUE., VEL= 00.00 /
+&SURF ID='BLOW4', POROUS=.TRUE., VEL= -12.86 /
+&SURF ID='BLOW5', POROUS=.TRUE., VEL= -13.68 /
+
+&MATL ID = 'STEEL'
+	EMISSIVITY = 1.0
+	DENSITY = 7850.
+	CONDUCTIVITY = 45.8
+	SPECIFIC_HEAT = 0.46 /
+
+&MATL ID = 'CONCRETE'
+	DENSITY = 2200.
+	CONDUCTIVITY = 1.2
+	SPECIFIC_HEAT = 0.88 /
+
+&MATL ID = 'ASPHALT'
+	EMISSIVITY = 0.92
+	DENSITY = 2120.
+	CONDUCTIVITY = 0.75
+	SPECIFIC_HEAT = 0.92 /
+
+&SURF ID = 'STEEL WALL'
+	FYI = 'steel wall'
+	COLOR = 'STEEL BLUE'
+	MATL_ID = 'STEEL'
+	THICKNESS = 0.1
+	ROUGHNESS = 0.00009 /
+
+&SURF ID = 'CONCRETE ROOF'
+	FYI = 'concrete roof'
+	COLOR = 'GRAY'
+	MATL_ID = 'CONCRETE'
+	THICKNESS = 0.1
+	ROUGHNESS = 0.003 /
+
+&SURF ID = 'ASPHALT SOIL'
+	FYI = 'asphalt soil'
+	COLOR = 'BLACK'
+	MATL_ID = 'ASPHALT'
+	THICKNESS = 0.1
+	ROUGHNESS = 0.00018 /
+
+&SURF ID = 'STEEL DOOR'
+	FYI = 'steel exit door'
+	COLOR = 'GREEN'
+	MATL_ID = 'STEEL'
+	THICKNESS = 0.1
+	ROUGHNESS = 0.00009 /
+	
+! emergency exits (separatec from one another 100m), dimensions 1 m x 2.1 m
+&VENT XB=  95.5,100.5, -4.50,-4.50, 0.00,2.10, SURF_ID='OPEN', COLOR='RED' / Exit 1
+&VENT XB= 195.5,200.5, -4.50,-4.50, 0.00,2.10, SURF_ID='OPEN', COLOR='RED' / Exit 2
+&VENT XB= 295.5,300.5, -4.50,-4.50, 0.00,2.10, SURF_ID='OPEN', COLOR='RED' / Exit 3
+&VENT XB= 395.5,400.5, -4.50,-4.50, 0.00,2.10, SURF_ID='OPEN', COLOR='RED' / Exit 4
+
+! temporary cover over exit nº1
+&OBST XB=  95.5,100.5, -4.50,-4.40, 0.00,2.10, SURF_ID='STEEL DOOR', DEVC_ID='det1' / Door 1
+
+! temporary cover over exit nº2 
+&OBST XB= 195.5,200.5, -4.50,-4.40, 0.00,2.10, SURF_ID='STEEL DOOR', DEVC_ID='det2' / Door 2
+
+! temporary cover over exit nº3
+&OBST XB= 295.5,300.5, -4.50,-4.40, 0.00,2.10, SURF_ID='STEEL DOOR', DEVC_ID='det3' / Door 3
+
+! temporary cover over exit nº4
+&OBST XB= 395.5,400.5, -4.50,-4.40, 0.00,2.10, SURF_ID='STEEL DOOR', DEVC_ID='det4' / Door 4
+
+&OBST XB= 88.6,91.3, -01.6,-00.8, 05.2,05.2, COLOR='BLUE' / Fan Shroud 1
+&OBST XB= 88.6,91.3, -01.6,-00.8, 06.0,06.0, COLOR='BLUE' / Fan Shroud 1
+&OBST XB= 88.6,91.3, -01.6,-01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 1
+&OBST XB= 88.6,91.3, -00.8,-00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 1
+
+&OBST XB= 88.6,91.3, -00.4, 00.4, 05.2,05.2, COLOR='BLUE' / Fan Shroud 2
+&OBST XB= 88.6,91.3, -00.4, 00.4, 06.0,06.0, COLOR='BLUE' / Fan Shroud 2
+&OBST XB= 88.6,91.3, -00.4,-00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 2
+&OBST XB= 88.6,91.3,  00.4, 00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 2
+
+&OBST XB= 88.6,91.3, 00.8,01.6, 05.2,05.2, COLOR='BLUE' / Fan Shroud 3
+&OBST XB= 88.6,91.3, 00.8,01.6, 06.0,06.0, COLOR='BLUE' / Fan Shroud 3
+&OBST XB= 88.6,91.3, 00.8,00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 3
+&OBST XB= 88.6,91.3, 01.6,01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 3
+
+&OBST XB= 173.6,176.3, -01.6,-00.8, 05.2,05.2, COLOR='BLUE' / Fan Shroud 4
+&OBST XB= 173.6,176.3, -01.6,-00.8, 06.0,06.0, COLOR='BLUE' / Fan Shroud 4
+&OBST XB= 173.6,176.3, -01.6,-01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 4
+&OBST XB= 173.6,176.3, -00.8,-00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 4
+
+&OBST XB= 173.6,176.3, -00.4, 00.4, 05.2,05.2, COLOR='BLUE' / Fan Shroud 5
+&OBST XB= 173.6,176.3, -00.4, 00.4, 06.0,06.0, COLOR='BLUE' / Fan Shroud 5
+&OBST XB= 173.6,176.3, -00.4,-00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 5
+&OBST XB= 173.6,176.3,  00.4, 00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 5
+
+&OBST XB= 173.6,176.3, 00.8,01.6, 05.2,05.2, COLOR='BLUE' / Fan Shroud 6
+&OBST XB= 173.6,176.3, 00.8,01.6, 06.0,06.0, COLOR='BLUE' / Fan Shroud 6
+&OBST XB= 173.6,176.3, 00.8,00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 6
+&OBST XB= 173.6,176.3, 01.6,01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 6
+
+&OBST XB= 258.6,261.3, -01.6,-00.8, 05.2,05.2, COLOR='BLUE' / Fan Shroud 7
+&OBST XB= 258.6,261.3, -01.6,-00.8, 06.0,06.0, COLOR='BLUE' / Fan Shroud 7
+&OBST XB= 258.6,261.3, -01.6,-01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 7
+&OBST XB= 258.6,261.3, -00.8,-00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 7
+
+&OBST XB= 258.6,261.3, -00.4, 00.4, 05.2,05.2, COLOR='BLUE' / Fan Shroud 8
+&OBST XB= 258.6,261.3, -00.4, 00.4, 06.0,06.0, COLOR='BLUE' / Fan Shroud 8
+&OBST XB= 258.6,261.3, -00.4,-00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 8
+&OBST XB= 258.6,261.3,  00.4, 00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 8
+
+&OBST XB= 258.6,261.3, 00.8,01.6, 05.2,05.2, COLOR='BLUE' / Fan Shroud 9
+&OBST XB= 258.6,261.3, 00.8,01.6, 06.0,06.0, COLOR='BLUE' / Fan Shroud 9
+&OBST XB= 258.6,261.3, 00.8,00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 9
+&OBST XB= 258.6,261.3, 01.6,01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 9
+
+&OBST XB= 343.6,346.3, -01.6,-00.8, 05.2,05.2, COLOR='BLUE' / Fan Shroud 10
+&OBST XB= 343.6,346.3, -01.6,-00.8, 06.0,06.0, COLOR='BLUE' / Fan Shroud 10
+&OBST XB= 343.6,346.3, -01.6,-01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 10
+&OBST XB= 343.6,346.3, -00.8,-00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 10
+
+&OBST XB= 343.6,346.3, -00.4, 00.4, 05.2,05.2, COLOR='BLUE' / Fan Shroud 11
+&OBST XB= 343.6,346.3, -00.4, 00.4, 06.0,06.0, COLOR='BLUE' / Fan Shroud 11
+&OBST XB= 343.6,346.3, -00.4,-00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 11
+&OBST XB= 343.6,346.3,  00.4, 00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 11
+
+&OBST XB= 343.6,346.3, 00.8,01.6, 05.2,05.2, COLOR='BLUE' / Fan Shroud 12
+&OBST XB= 343.6,346.3, 00.8,01.6, 06.0,06.0, COLOR='BLUE' / Fan Shroud 12
+&OBST XB= 343.6,346.3, 00.8,00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 12
+&OBST XB= 343.6,346.3, 01.6,01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 12
+
+&OBST XB= 428.6,431.3, -01.6,-00.8, 05.2,05.2, COLOR='BLUE' / Fan Shroud 13
+&OBST XB= 428.6,431.3, -01.6,-00.8, 06.0,06.0, COLOR='BLUE' / Fan Shroud 13
+&OBST XB= 428.6,431.3, -01.6,-01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 13
+&OBST XB= 428.6,431.3, -00.8,-00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 13
+
+&OBST XB= 428.6,431.3, -00.4, 00.4, 05.2,05.2, COLOR='BLUE' / Fan Shroud 14
+&OBST XB= 428.6,431.3, -00.4, 00.4, 06.0,06.0, COLOR='BLUE' / Fan Shroud 14
+&OBST XB= 428.6,431.3, -00.4,-00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 14
+&OBST XB= 428.6,431.3,  00.4, 00.4, 05.2,06.0, COLOR='BLUE' / Fan Shroud 14
+
+&OBST XB= 428.6,431.3, 00.8,01.6, 05.2,05.2, COLOR='BLUE' / Fan Shroud 15
+&OBST XB= 428.6,431.3, 00.8,01.6, 06.0,06.0, COLOR='BLUE' / Fan Shroud 15
+&OBST XB= 428.6,431.3, 00.8,00.8, 05.2,06.0, COLOR='BLUE' / Fan Shroud 15
+&OBST XB= 428.6,431.3, 01.6,01.6, 05.2,06.0, COLOR='BLUE' / Fan Shroud 15
+
+! trio of fans at 90 m, dimensions 0.8 m x 0.8 m x 2.7 m
+&OBST XB= 90.0,90.0, -01.6,-00.8, 05.2,06.0, COLOR='RED', SURF_ID='BLOW1', DEVC_ID='det5' / Fan 1
+&OBST XB= 90.0,90.0, -00.4, 00.4,  05.2,06.0, COLOR='RED', SURF_ID='BLOW1', DEVC_ID='det5' / Fan 2
+&OBST XB= 90.0,90.0,  00.8, 01.6,  05.2,06.0, COLOR='RED', SURF_ID='BLOW1', DEVC_ID='det5' / Fan 3
+
+! trio of fans at 175 m, dimensions 0.8 m x 0.8 m x 2.7 m
+&OBST XB= 175.0,175.0, -01.6,-00.8, 05.2,06.0, COLOR='RED', SURF_ID='BLOW2', DEVC_ID='det6' / Fan 4
+&OBST XB= 175.0,175.0, -00.4, 00.4, 05.2,06.0, COLOR='RED', SURF_ID='BLOW2', DEVC_ID='det6' / Fan 5
+&OBST XB= 175.0,175.0,  00.8, 01.6, 05.2,06.0, COLOR='RED', SURF_ID='BLOW2', DEVC_ID='det6' / Fan 6
+
+! trio of fans at 260 m, dimensions 0.8 m x 0.8 m x 2.7  m
+&OBST XB= 260.0,260.0, -01.6,-00.8, 05.2,06.0, COLOR='RED', SURF_ID='BLOW3', DEVC_ID='det7' / Fan 7
+&OBST XB= 260.0,260.0, -00.4, 00.4, 05.2,06.0, COLOR='RED', SURF_ID='BLOW3', DEVC_ID='det7' / Fan 8
+&OBST XB= 260.0,260.0,  00.8, 01.6, 05.2,06.0, COLOR='RED', SURF_ID='BLOW3', DEVC_ID='det7' / Fan 9
+
+! trio of fans at 345 m, dimensions 0.8 m x 0.8 m x 2.7 m
+&OBST XB= 345.0,345.0, -01.6,-00.8, 05.2,06.0, COLOR='RED', SURF_ID='BLOW4', DEVC_ID='det8' / Fan 10
+&OBST XB= 345.0,345.0, -00.4, 00.4, 05.2,06.0, COLOR='RED', SURF_ID='BLOW4', DEVC_ID='det8' / Fan 11
+&OBST XB= 345.0,345.0,  00.8, 01.6, 05.2,06.0, COLOR='RED', SURF_ID='BLOW4', DEVC_ID='det8' / Fan 12
+
+! trio of fans at 430 m, dimensions 0.8 m x 0.8 m x 2.7 m
+&OBST XB= 430.0,430.0, -01.6,-00.8, 05.2,06.0, COLOR='RED', SURF_ID='BLOW5', DEVC_ID='det9' / Fan 13
+&OBST XB= 430.0,430.0, -00.4, 00.4, 05.2,06.0, COLOR='RED', SURF_ID='BLOW5', DEVC_ID='det9' / Fan 14
+&OBST XB= 430.0,430.0,  00.8, 01.6, 05.2,06.0, COLOR='RED', SURF_ID='BLOW5', DEVC_ID='det9' / Fan 15
+
+! names surface as "BURNER", has heat release rate per unit are of 3465 kW/m^2 NFPA 502 fire "Runehamar an HGV Fire Test"
+
+&SURF ID='BURNER', HRRPUA=3465.00,RAMP_Q='HEATER_RAMP'  / The fire      
+&RAMP ID='HEATER_RAMP',T=0.0,F=0.00 /
+&RAMP ID='HEATER_RAMP',T=300.0,F=0.05 /
+&RAMP ID='HEATER_RAMP',T=600.0,F=0.50 /
+&RAMP ID='HEATER_RAMP',T=900.0,F=0.87 /
+&RAMP ID='HEATER_RAMP',T=1200.0,F=1.00 /
+&RAMP ID='HEATER_RAMP',T=1500.0,F=0.75 /
+&RAMP ID='HEATER_RAMP',T=1800.0,F=0.70 /
+&RAMP ID='HEATER_RAMP',T=2100.0,F=0.20 /
+&RAMP ID='HEATER_RAMP',T=2400.0,F=0.10 /
+&RAMP ID='HEATER_RAMP',T=2700.0,F=0.05 /
+
+! create 2-dimensional vent with properties of BURNER, surface area is 2.55 m x 22.63 m (57.72 m^2)
+! HRR of vent is 57.72 m^2 x 3465 kW/m^2 = 200000 kW. Fire located in 260 meters.
+
+&OBST XB= 248.7,271.3, -1.3,1.3, 0.00,0.1, COLOR='PURPLE' / Seat of the burner vent
+&VENT XB= 248.7,271.3, -1.3,1.3, 0.1,0.1, SURF_ID='BURNER', COLOR='PURPLE' / Vent on the floor - assigned the fire to it
+
+!timers DOORS
+&DEVC ID='det1', XYZ=1.0,1.0,1.0, SETPOINT=1068.0, QUANTITY='TIME',INITIAL_STATE=.TRUE.   /
+&DEVC ID='det2', XYZ=2.0,2.0,2.0, SETPOINT=1038.0, QUANTITY='TIME',INITIAL_STATE=.TRUE.   /
+&DEVC ID='det3', XYZ=3.0,3.0,3.0, SETPOINT=1032.0, QUANTITY='TIME',INITIAL_STATE=.TRUE.  /
+&DEVC ID='det4', XYZ=4.0,4.0,4.0, SETPOINT=1062.0, QUANTITY='TIME',INITIAL_STATE=.TRUE.  /
+
+!timers, FAN starts at 5 sec
+&DEVC ID='det5', XYZ=5.0,-1.0,5.0, SETPOINT=545.5, QUANTITY='TIME',INITIAL_STATE=.FALSE.  /
+&DEVC ID='det6', XYZ=6.0,-2.0,6.0, SETPOINT=545.5, QUANTITY='TIME',INITIAL_STATE=.FALSE.  /
+&DEVC ID='det7', XYZ=7.0,1.0,1.0,  SETPOINT=545.5, QUANTITY='TIME',INITIAL_STATE=.FALSE.  /
+&DEVC ID='det8', XYZ=8.0,2.0,2.0,  SETPOINT=545.5, QUANTITY='TIME',INITIAL_STATE=.FALSE.  /
+&DEVC ID='det9', XYZ=9.0,3.0,3.0,  SETPOINT=545.5, QUANTITY='TIME',INITIAL_STATE=.FALSE.  /
+
+! vents open to atmospshere
+&VENT MB='XMIN', SURF_ID='OPEN' / Portal 1
+&VENT MB='XMAX', SURF_ID='OPEN' / Portal 2
+
+! boundary surface
+&VENT MB='ZMIN', SURF_ID='ASPHALT SOIL' / Soil
+&VENT MB='ZMAX', SURF_ID='CONCRETE ROOF' / Roof
+&VENT XB= 0.00,520.00, -4.50,-4.50, 0.00,6.40, SURF_ID='STEEL WALL' / Front Wall
+&VENT XB= 0.00,520.00,   4.50,4.50, 0.00,6.40, SURF_ID='STEEL WALL' / Rear Wall
+
+! boundary files
+&BNDF QUANTITY='WALL_TEMPERATURE' /
+&BNDF QUANTITY='BURNING_RATE' /
+&BNDF QUANTITY='HEAT_FLUX' /
+
+! slice files
+&SLCF PBY=0.00, QUANTITY='VELOCITY' VECTOR=.TRUE./
+&SLCF PBY=0.00, QUANTITY='TEMPERATURE', VECTOR=.TRUE. /
+&SLCF PBY=0.00, QUANTITY='HRRPUV' /
+&SLCF PBY=0.00, QUANTITY='PRESSURE' /
+&SLCF PBY=0.00, QUANTITY='DENSITY' /
+&SLCF PBX=0.00, QUANTITY='MIXTURE FRACTION' /
+
+! slice file to show air flow through emergency exit 1
+&SLCF PBX=97.5, QUANTITY='VELOCITY' VECTOR=.TRUE./
+
+! slice files
+&SLCF PBY=0.00, QUANTITY='carbon monoxide' /
+&SLCF PBY=0.00, QUANTITY='soot' /
+&SLCF PBY=0.00, QUANTITY='carbon dioxide' /
+
+! specifies location of end-points to measure path obscuration and names it "beam"
+! note that both endpoints lie on the boundary of the domain and are not displayed in Smokeview
+! note that presence of setpoint of 50% obscuration is redundant as the device is not linked to anything, it is just a measuring device
+&DEVC XB=0.0,226.0,-4.50,4.50,0.00,1.20,QUANTITY='path obscuration', SETPOINT=50, ID='beam' /
+
+! specifies location of sensor to measure temperature and names it "Temp 1a"
+&DEVC XYZ=45.00,2.70,1.20, QUANTITY='TEMPERATURE', ID='Temp_1a' /
+! specifies location of sensor to measure temperature and names it "Temp 1b"
+&DEVC XYZ=45.00,2.70,3.20, QUANTITY='TEMPERATURE', ID='Temp_1b' /
+! specifies location of sensor to measure temperature and names it "Temp 2a"
+&DEVC XYZ=132.50,2.70,1.20, QUANTITY='TEMPERATURE', ID='Temp_2a' /
+! specifies location of sensor to measure temperature and names it "Temp 2b"
+&DEVC XYZ=132.50,2.70,3.20, QUANTITY='TEMPERATURE', ID='Temp_2b' /
+! specifies location of sensor to measure temperature and names it "Temp 3a"
+&DEVC XYZ=217.50,2.70,1.20, QUANTITY='TEMPERATURE', ID='Temp_3a' /
+! specifies location of sensor to measure temperature and names it "Temp 3b"
+&DEVC XYZ=217.50,2.70,3.20, QUANTITY='TEMPERATURE', ID='Temp_3b' /
+! specifies location of sensor to measure temperature and names it "Temp 4a"
+&DEVC XYZ=302.50,2.70,1.20, QUANTITY='TEMPERATURE', ID='Temp_4a' /
+! specifies location of sensor to measure temperature and names it "Temp 4b"
+&DEVC XYZ=302.50,2.70,3.20, QUANTITY='TEMPERATURE', ID='Temp_4b' /
+! specifies location of sensor to measure temperature and names it "Temp 5a"
+&DEVC XYZ=387.50,2.70,1.20, QUANTITY='TEMPERATURE', ID='Temp_5a' /
+! specifies location of sensor to measure temperature and names it "Temp 5b"
+&DEVC XYZ=387.50,2.70,3.20, QUANTITY='TEMPERATURE', ID='Temp_5b' /
+! specifies location of sensor to measure temperature and names it "Temp 6a"
+&DEVC XYZ=475.50,2.70,1.20, QUANTITY='TEMPERATURE', ID='Temp_6a' /
+! specifies location of sensor to measure temperature and names it "Temp 6b"
+&DEVC XYZ=475.50,2.70,3.20, QUANTITY='TEMPERATURE', ID='Temp_6b' /
+
+! specifies location of sensor to measure soot volume fraction and names it "Soot 1a"
+&DEVC XYZ=45.00,0.90,1.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_1a' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 1b"
+&DEVC XYZ=45.00,0.90,3.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_1b' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 2a"
+&DEVC XYZ=132.50,0.90,1.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_2a' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 2b"
+&DEVC XYZ=132.50,0.90,3.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_2b' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 3a"
+&DEVC XYZ=217.50,0.90,1.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_3a' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 3b"
+&DEVC XYZ=217.50,0.90,3.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_3b' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 4a"
+&DEVC XYZ=302.50,0.90,1.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_4a' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 4b"
+&DEVC XYZ=302.50,0.90,3.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_4b' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 5a"
+&DEVC XYZ=387.50,0.90,1.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_5a' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 5b"
+&DEVC XYZ=387.50,0.90,3.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_5b' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 6a"
+&DEVC XYZ=475.00,0.90,1.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_6a' /
+! specifies location of sensor to measure soot volume fraction and names it "Soot 6b"
+&DEVC XYZ=475.00,0.90,3.20, QUANTITY='SOOT VOLUME FRACTION', ID='Soot_6b' /
+
+! specifies location of sensor to measure visibility and names it "Visibility 1a"
+&DEVC XYZ=45.00,-0.90,1.20, QUANTITY='VISIBILITY', ID='Visibility_1a' /
+! specifies location of sensor to measure visibility and names it "Visibility 1b"
+&DEVC XYZ=45.00,-0.90,3.20, QUANTITY='VISIBILITY', ID='Visibility_1b' /
+! specifies location of sensor to measure visibility and names it "Visibility 2a"
+&DEVC XYZ=132.50,-0.90,1.20, QUANTITY='VISIBILITY', ID='Visibility_2a' /
+! specifies location of sensor to measure visibility and names it "Visibility 2b"
+&DEVC XYZ=132.50,-0.90,3.20, QUANTITY='VISIBILITY', ID='Visibility_2b' /
+! specifies location of sensor to measure visibility and names it "Visibility 3a"
+&DEVC XYZ=217.50,-0.90,1.20, QUANTITY='VISIBILITY', ID='Visibility_3a' /
+! specifies location of sensor to measure visibility and names it "Visibility 3b"
+&DEVC XYZ=217.50,-0.90,3.20, QUANTITY='VISIBILITY', ID='Visibility_3b' /
+! specifies location of sensor to measure visibility and names it "Visibility 4a"
+&DEVC XYZ=302.50,-0.90,1.20, QUANTITY='VISIBILITY', ID='Visibility_4a' /
+! specifies location of sensor to measure visibility and names it "Visibility 4b"
+&DEVC XYZ=302.50,-0.90,3.20, QUANTITY='VISIBILITY', ID='Visibility_4b' /
+! specifies location of sensor to measure visibility and names it "Visibility 5a"
+&DEVC XYZ=387.50,-0.90,1.20, QUANTITY='VISIBILITY', ID='Visibility_5a' /
+! specifies location of sensor to measure visibility and names it "Visibility 5b"
+&DEVC XYZ=387.50,-0.90,3.20, QUANTITY='VISIBILITY', ID='Visibility_5b' /
+! specifies location of sensor to measure visibility and names it "Visibility 6a"
+&DEVC XYZ=475.00,-0.90,1.20, QUANTITY='VISIBILITY', ID='Visibility_6a' / 
+! specifies location of sensor to measure visibility and names it "Visibility 6b"
+&DEVC XYZ=475.00,-0.90,3.20, QUANTITY='VISIBILITY', ID='Visibility_6b' /
+
+! specifies location of sensor to measure u-velocity and names it "U-velocity 1a"
+&DEVC XYZ=45.00,-2.70,1.20, QUANTITY='U-VELOCITY', ID='U-velocity_1a' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 1b"
+&DEVC XYZ=45.00,-2.70,3.20, QUANTITY='U-VELOCITY', ID='U-velocity_1b' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 2a"
+&DEVC XYZ=132.50,-2.70,1.20, QUANTITY='U-VELOCITY', ID='U-velocity_2a' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 2b"
+&DEVC XYZ=132.50,-2.70,3.20, QUANTITY='U-VELOCITY', ID='U-velocity_2b' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 3a"
+&DEVC XYZ=217.50,-2.70,1.20, QUANTITY='U-VELOCITY', ID='U-velocity_3a' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 3b"
+&DEVC XYZ=217.50,-2.70,3.20, QUANTITY='U-VELOCITY', ID='U-velocity_3b' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 4a"
+&DEVC XYZ=302.50,-2.70,1.20, QUANTITY='U-VELOCITY', ID='U-velocity_4a' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 4b"
+&DEVC XYZ=302.50,-2.70,3.20, QUANTITY='U-VELOCITY', ID='U-velocity_4b' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 5a"
+&DEVC XYZ=387.50,-2.70,1.20, QUANTITY='U-VELOCITY', ID='U-velocity_5a' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 5b"
+&DEVC XYZ=387.50,-2.70,3.20, QUANTITY='U-VELOCITY', ID='U-velocity_5b' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 6a"
+&DEVC XYZ=475.00,-2.70,1.20, QUANTITY='U-VELOCITY', ID='U-velocity_6a' /
+! specifies location of sensor to measure u-velocity and names it "U-velocity 6b"
+&DEVC XYZ=475.00,-2.70,3.20, QUANTITY='U-VELOCITY', ID='U-velocity_6b' /
+
+&TAIL /
